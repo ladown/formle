@@ -222,6 +222,19 @@ The schema parser:
 
 The parser is strict by design. Invalid schemas fail fast, not at runtime.
 
+## Error reporting
+
+The parser collects all issues before throwing. On invalid input, it throws
+a `FormleSchemaError` containing an `issues: SchemaIssue[]` array, where each
+issue has `{ path: string; message: string }`. The error's `.message` includes
+a human-readable summary of all issues for direct logging.
+
+Paths follow a dot-and-bracket notation rooted at the schema object:
+`fields[0].validation.minLength`, `version`, `fields`, or `''` (root).
+
+This behaviour allows consumers to surface all problems at once, rather than
+fix one and rerun to discover the next.
+
 ## Adapters (input formats)
 
 Formle accepts schemas via three input paths:
@@ -240,7 +253,6 @@ Adapters are pure converters: they produce a `FormSchema` and have no runtime co
 
 These are intentionally left undecided pending implementation. When making the decision, document the choice here.
 
-- How does the parser surface multiple errors? Single error vs collected error list?
 - Should `default` values be set on form init, or only on first interaction?
 - Should disabled fields participate in validation or not?
 - What is the AST shape downstream layers consume? (Define in implementation.)
