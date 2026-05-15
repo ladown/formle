@@ -219,6 +219,7 @@ The schema parser:
 4. Rejects `showWhen` referring to a non-existent field ID
 5. Rejects duplicate field IDs
 6. Produces a normalized AST that all downstream layers consume
+7. (Planned) Rejects schemas with `pattern` strings that are not valid regex syntax — currently this fails at runtime in the validator instead.
 
 The parser is strict by design. Invalid schemas fail fast, not at runtime.
 
@@ -256,3 +257,4 @@ These are intentionally left undecided pending implementation. When making the d
 - Should `default` values be set on form init, or only on first interaction?
 - Should disabled fields participate in validation or not?
 - What is the AST shape downstream layers consume? (Define in implementation.)
+- Should the parser validate that `pattern` is a syntactically valid regex, rather than letting it fail at validation time? Decision: yes, defer to parser; not yet implemented.
