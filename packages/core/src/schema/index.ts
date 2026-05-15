@@ -15,3 +15,7 @@ export type {
   TextareaField,
   ValidationRules,
 } from './types';
+
+export { FormleSchemaError } from './errors';
+export type { SchemaIssue } from './errors';
+export { parseSchema } from './parse-schema';
