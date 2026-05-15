@@ -16,8 +16,8 @@ Formle is in pre-v0.1.0 development. The public API will change. Until v1.0.0, b
 
 Prerequisites:
 
-- Node.js 20.19.0 or later
-- pnpm 9 or later
+- Node.js 24.15.0 or later
+- pnpm 11 or later
 
 Setup:
 

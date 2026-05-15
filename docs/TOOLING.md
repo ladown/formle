@@ -6,7 +6,7 @@ This document describes Formle's build, lint, format, test, and release toolchai
 
 | Layer             | Tool                                             | Status                  |
 | ----------------- | ------------------------------------------------ | ----------------------- |
-| Package manager   | `pnpm`                                           | v9+                     |
+| Package manager   | `pnpm`                                           | v1+                     |
 | Build (libraries) | `tsdown`                                         | pre-1.0, pinned exactly |
 | Type checking     | TypeScript strict mode                           | latest                  |
 | Linter            | `oxlint`                                         | v1+                     |
@@ -19,11 +19,11 @@ This document describes Formle's build, lint, format, test, and release toolchai
 
 ## Node version
 
-Minimum: **Node 20.19.0**. This is `tsdown`'s minimum requirement and pins the rest of the toolchain to a modern baseline. Set in:
+Minimum: **Node 24.15.0** (current LTS as of project start). `tsdown` requires Node 20+; we pin higher to take advantage of modern Node features and align with the most recent LTS. Set in:
 
-- `package.json` → `"engines": { "node": ">=20.19.0" }`
-- `.nvmrc` → `20.19.0` (or higher LTS)
-- `.github/workflows/*.yml` → `node-version: '20.19.0'`
+- `package.json` → `"engines": { "node": ">=24.15.0" }`
+- `.nvmrc` → `24.15.0` (or higher LTS)
+- `.github/workflows/*.yml` → `node-version: '24.15.0'`
 
 ## Why the Oxc stack
 
