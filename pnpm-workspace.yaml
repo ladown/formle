@@ -1,5 +1,8 @@
 # yaml-language-server: $schema=https://json.schemastore.org/pnpm-workspace.json
 packages:
   - "packages/*"
+  - "examples/*"
+allowBuilds:
+  esbuild: true
 onlyBuiltDependencies:
   - esbuild

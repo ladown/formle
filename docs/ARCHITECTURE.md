@@ -27,8 +27,7 @@ formle/
 │   │   └── tsdown.config.ts
 │   └── docs/                 → VitePress site, not published
 ├── examples/
-│   ├── basic-zod/            → minimal Vue example with Zod
-│   └── server-driven/        → example consuming a remote schema
+│   └── basic/                → minimal Vue + Vite demo (server-driven example planned for a later session)
 ├── .changeset/               → not used; we use semantic-release-monorepo
 ├── .github/
 │   ├── ISSUE_TEMPLATE/

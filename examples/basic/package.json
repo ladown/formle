@@ -1,0 +1,22 @@
+{
+  "name": "formle-example-basic",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "formle": "workspace:*",
+    "formle-vue": "workspace:*",
+    "vue": "3.5.34"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "6.0.7",
+    "typescript": "6.0.3",
+    "vite": "8.0.13",
+    "vue-tsc": "3.2.9"
+  }
+}
