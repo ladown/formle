@@ -127,6 +127,60 @@ describe('useForm', () => {
     expect(form.isSubmitting.value).toBe(false);
   });
 
+  it('fields map has an entry per schema field', () => {
+    const form = useForm({ schema: baseSchema, onSubmit: vi.fn() });
+    expect(Object.keys(form.fields.value).sort()).toEqual(['name', 'nickname']);
+    expect(form.fields.value.name.name).toBe('name');
+    expect(form.fields.value.nickname.name).toBe('nickname');
+  });
+
+  it('fields[id].value reflects values[id]', async () => {
+    const form = useForm({
+      schema: baseSchema,
+      onSubmit: vi.fn(),
+      initialValues: { name: 'Egor' },
+    });
+    expect(form.fields.value.name.value).toBe('Egor');
+    form.values.name = 'Updated';
+    await nextTick();
+    expect(form.fields.value.name.value).toBe('Updated');
+  });
+
+  it("fields[id]['onUpdate:modelValue'] updates values[id]", () => {
+    const form = useForm({ schema: baseSchema, onSubmit: vi.fn() });
+    form.fields.value.name['onUpdate:modelValue']('Hello');
+    expect(form.values.name).toBe('Hello');
+  });
+
+  it('fields[id].onInput with input event updates values[id]', () => {
+    const form = useForm({ schema: baseSchema, onSubmit: vi.fn() });
+    const input = document.createElement('input');
+    input.value = 'typed';
+    const event = new Event('input');
+    Object.defineProperty(event, 'target', { value: input });
+    form.fields.value.name.onInput(event);
+    expect(form.values.name).toBe('typed');
+  });
+
+  it('fields[id].onInput with non-input target is a no-op', () => {
+    const form = useForm({
+      schema: baseSchema,
+      onSubmit: vi.fn(),
+      initialValues: { name: 'Egor' },
+    });
+    const div = document.createElement('div');
+    const event = new Event('input');
+    Object.defineProperty(event, 'target', { value: div });
+    expect(() => form.fields.value.name.onInput(event)).not.toThrow();
+    expect(form.values.name).toBe('Egor');
+  });
+
+  it('fields[id].onBlur exists and is a callable no-op', () => {
+    const form = useForm({ schema: baseSchema, onSubmit: vi.fn() });
+    expect(typeof form.fields.value.name.onBlur).toBe('function');
+    expect(() => form.fields.value.name.onBlur()).not.toThrow();
+  });
+
   it('mutating values is reactive', async () => {
     const form = useForm({ schema: baseSchema, onSubmit: vi.fn() });
     let seen = '';

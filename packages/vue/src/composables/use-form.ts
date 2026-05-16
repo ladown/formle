@@ -9,11 +9,20 @@ export type UseFormOptions = {
   initialValues?: FormValues;
 };
 
+export type FieldBindings = {
+  name: string;
+  value: unknown;
+  "onUpdate:modelValue": (next: unknown) => void;
+  onInput: (event: Event) => void;
+  onBlur: () => void;
+};
+
 export type UseFormReturn = {
   values: FormValues;
   errors: ComputedRef<Record<string, ValidationIssue[]>>;
   isSubmitting: Ref<boolean>;
   isValid: ComputedRef<boolean>;
+  fields: ComputedRef<Record<string, FieldBindings>>;
   handleSubmit: () => Promise<void>;
   reset: () => void;
 };
@@ -87,6 +96,34 @@ export function useForm(options: UseFormOptions): UseFormReturn {
     return issues.value.length === 0;
   });
 
+  const fields = computed<Record<string, FieldBindings>>(() => {
+    const map: Record<string, FieldBindings> = {};
+    for (const field of schema.fields) {
+      const id = field.id;
+      map[id] = {
+        name: id,
+        value: values[id],
+        "onUpdate:modelValue": (next: unknown) => {
+          values[id] = next;
+        },
+        onInput: (event: Event) => {
+          const target = event.target;
+          if (
+            !(target instanceof HTMLInputElement) &&
+            !(target instanceof HTMLTextAreaElement)
+          ) {
+            return;
+          }
+          values[id] = target.value;
+        },
+        // No-op for v0.1.0. On-blur validation comes in v0.2; keeping the key
+        // now means consumer templates won't change later.
+        onBlur: () => {},
+      };
+    }
+    return map;
+  });
+
   const handleSubmit = async (): Promise<void> => {
     isSubmitting.value = true;
     try {
@@ -116,6 +153,7 @@ export function useForm(options: UseFormOptions): UseFormReturn {
     errors,
     isSubmitting,
     isValid,
+    fields,
     handleSubmit,
     reset,
   };
