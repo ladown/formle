@@ -1,5 +1,5 @@
 {
-  "name": "formle",
+  "name": "@formle/core",
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",

@@ -104,7 +104,7 @@ Default error messages are English. They are customizable via the `useForm` `mes
 Custom validators are registered globally and referenced by ID in the schema:
 
 ```ts
-import { registerValidator } from "formle";
+import { registerValidator } from "@formle/core";
 
 registerValidator("matchesIBAN", (value: string) => {
   return /^[A-Z]{2}\d{2}/.test(value) ? null : "Invalid IBAN format";

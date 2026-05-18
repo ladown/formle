@@ -1,5 +1,5 @@
 {
-  "name": "formle-vue",
+  "name": "@formle/vue",
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
@@ -9,7 +9,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "formle": "workspace:*"
+    "@formle/core": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.5.0"

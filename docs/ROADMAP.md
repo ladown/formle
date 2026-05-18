@@ -8,12 +8,12 @@ This file is the source of truth for what is in scope for each release. Consult 
 
 ### In scope
 
-- **Vue 3 adapter** (`formle-vue`)
+- **Vue 3 adapter** (`@formle/vue`)
   - `useForm({ schema, onSubmit })` composable
   - `useField(name)` composable
   - `<Form>` and `<Field>` components with slot-based rendering
   - Reactive form state (values, errors, touched, dirty, isSubmitting, isValid)
-- **Framework-agnostic core** (`formle`)
+- **Framework-agnostic core** (`@formle/core`)
   - Schema parser for the custom Formle format (see `docs/SCHEMA_SPEC.md`)
   - Validation engine, synchronous only
   - Form state machine

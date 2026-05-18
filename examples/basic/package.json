@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "formle": "workspace:*",
-    "formle-vue": "workspace:*",
+    "@formle/core": "workspace:*",
+    "@formle/vue": "workspace:*",
     "vue": "3.5.34"
   },
   "devDependencies": {

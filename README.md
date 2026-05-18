@@ -29,8 +29,8 @@ You can still write schemas in TypeScript — that path is fully supported and r
 
 Formle is a monorepo of two published packages:
 
-- **`formle`** — framework-agnostic core (schema parsing, validation engine, form state)
-- **`formle-vue`** — Vue 3 adapter (composables, components, slot-based rendering)
+- **`@formle/core`** — framework-agnostic core (schema parsing, validation engine, form state)
+- **`@formle/vue`** — Vue 3 adapter (composables, components, slot-based rendering)
 
 Future adapters (React, Svelte) will follow the same pattern. See `docs/ARCHITECTURE.md`.
 
@@ -40,7 +40,7 @@ The API below is the target shape for v0.1.0. It is not yet implemented.
 
 ```vue
 <script setup lang="ts">
-import { useForm } from "formle-vue";
+import { useForm } from "@formle/vue";
 import { z } from "zod";
 
 const schema = z.object({

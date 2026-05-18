@@ -1,4 +1,4 @@
-import type { ValidationIssue } from "formle";
+import type { ValidationIssue } from "@formle/core";
 import type { ComputedRef, WritableComputedRef } from "vue";
 import { computed } from "vue";
 import type { FieldBindings, UseFormReturn } from "./use-form";

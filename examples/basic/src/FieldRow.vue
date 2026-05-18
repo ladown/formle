@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Field } from "formle";
-import { useField, type UseFormReturn } from "formle-vue";
+import type { Field } from "@formle/core";
+import { useField, type UseFormReturn } from "@formle/vue";
 
 const props = defineProps<{
   field: Field;

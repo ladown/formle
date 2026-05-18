@@ -14,10 +14,10 @@ importers:
 
   examples/basic:
     dependencies:
-      formle:
+      '@formle/core':
         specifier: workspace:*
         version: link:../../packages/core
-      formle-vue:
+      '@formle/vue':
         specifier: workspace:*
         version: link:../../packages/vue
       vue:
@@ -45,7 +45,7 @@ importers:
 
   packages/vue:
     dependencies:
-      formle:
+      '@formle/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:

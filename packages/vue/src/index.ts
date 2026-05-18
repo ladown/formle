@@ -1,2 +1,2 @@
-export { VERSION } from 'formle';
+export { VERSION } from '@formle/core';
 export * from './composables';

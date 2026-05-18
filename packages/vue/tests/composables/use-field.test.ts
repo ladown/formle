@@ -1,4 +1,4 @@
-import type { FormSchema } from 'formle';
+import type { FormSchema } from '@formle/core';
 import { describe, expect, it, vi } from 'vitest';
 import { useField } from '../../src/composables/use-field';
 import { useForm } from '../../src/composables/use-form';

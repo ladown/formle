@@ -7,7 +7,7 @@ This document describes Formle's package layout, layer separation, and dependenc
 ```
 formle/
 ├── packages/
-│   ├── core/                 → published as "formle"
+│   ├── core/                 → published as "@formle/core"
 │   │   ├── src/
 │   │   │   ├── schema/       → schema parser and normalization
 │   │   │   ├── validation/   → validation engine
@@ -17,7 +17,7 @@ formle/
 │   │   ├── tests/
 │   │   ├── package.json
 │   │   └── tsdown.config.ts
-│   ├── vue/                  → published as "formle-vue"
+│   ├── vue/                  → published as "@formle/vue"
 │   │   ├── src/
 │   │   │   ├── composables/  → useForm, useField
 │   │   │   ├── components/   → Form.vue, Field.vue
@@ -45,27 +45,27 @@ formle/
 
 ## Published packages
 
-Two packages are published. Both are unscoped.
+Two packages are published under the `@formle` scope.
 
-| Package      | Description                                        | Depends on                      |
-| ------------ | -------------------------------------------------- | ------------------------------- |
-| `formle`     | Framework-agnostic core: schema, validation, state | Runtime: none                   |
-| `formle-vue` | Vue 3 adapter: composables, components             | Runtime: `formle`, `vue` (peer) |
+| Package         | Description                                        | Depends on                            |
+| --------------- | -------------------------------------------------- | ------------------------------------- |
+| `@formle/core`  | Framework-agnostic core: schema, validation, state | Runtime: none                         |
+| `@formle/vue`   | Vue 3 adapter: composables, components             | Runtime: `@formle/core`, `vue` (peer) |
 
 The consumer installs both:
 
 ```sh
-pnpm add formle formle-vue
+pnpm add @formle/core @formle/vue
 ```
 
-Future adapters (`formle-react`, `formle-svelte`) follow the same pattern and depend on `formle`.
+Future adapters (`@formle/react`, `@formle/svelte`) follow the same pattern and depend on `@formle/core`.
 
 ## Dependency rules
 
 These rules are enforced via package.json dependencies and conventions. Violations break the architecture.
 
 1. **`packages/core` must not import from `vue`, `react`, or any framework.** The core is pure TypeScript. Its only runtime dependency is the standard library.
-2. **`packages/vue` may import from `packages/core` (as `formle`) and from `vue`.** Nothing else as a runtime dependency.
+2. **`packages/vue` may import from `packages/core` (as `@formle/core`) and from `vue`.** Nothing else as a runtime dependency.
 3. **No circular dependencies.** Core has no knowledge of adapters.
 4. **`vue` is a peer dependency in `packages/vue`, not a regular dependency.** This is critical: consumers bring their own Vue.
 

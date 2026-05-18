@@ -82,7 +82,7 @@ export default defineConfig({
 For `packages/vue`, add Vue SFC support via a Rolldown-compatible plugin. Verify before adding:
 
 ```sh
-pnpm --filter formle-vue build
+pnpm --filter @formle/vue build
 ```
 
 Should produce `dist/index.js`, `dist/index.cjs`, `dist/index.d.ts`, `dist/index.d.cts`.
@@ -163,7 +163,7 @@ Run:
 
 ```sh
 pnpm test               # all packages
-pnpm --filter formle test  # one package
+pnpm --filter @formle/core test  # one package
 pnpm test --watch       # watch mode
 ```
 
@@ -178,7 +178,7 @@ Each package is versioned and released independently. The release workflow:
    - `feat:` → minor
    - `fix:`, `perf:` → patch
    - `BREAKING CHANGE:` in body → major (until v1.0.0, breaking changes go via minor)
-5. Tags are created per package: `formle@0.1.0`, `formle-vue@0.1.0`
+5. Tags are created per package: `@formle/core@0.1.0`, `@formle/vue@0.1.0`
 6. Changelog entries are generated per package
 7. npm publish per package
 

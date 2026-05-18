@@ -8,8 +8,8 @@ assignees: ""
 
 ## Versions
 
-- `formle`:
-- `formle-vue`:
+- `@formle/core`:
+- `@formle/vue`:
 - `vue`:
 - Node:
 - Browser (if relevant):

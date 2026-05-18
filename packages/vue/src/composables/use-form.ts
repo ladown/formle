@@ -1,5 +1,5 @@
-import type { Field, FormSchema, FormValues, ValidationIssue } from "formle";
-import { validate } from "formle";
+import type { Field, FormSchema, FormValues, ValidationIssue } from "@formle/core";
+import { validate } from "@formle/core";
 import type { ComputedRef, Ref } from "vue";
 import { computed, reactive, ref } from "vue";
 

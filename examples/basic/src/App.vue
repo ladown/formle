@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { FormSchema, FormValues } from 'formle';
-import { useForm } from 'formle-vue';
+import type { FormSchema, FormValues } from '@formle/core';
+import { useForm } from '@formle/vue';
 import { ref } from 'vue';
 import FieldRow from './FieldRow.vue';
 
