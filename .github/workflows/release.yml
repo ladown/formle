@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+
+# semantic-release needs to push tags, commits, and create GitHub releases.
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # semantic-release requires the full history to compute version bumps.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm -r exec tsc --noEmit
+
+      - name: Test
+        run: pnpm -r test
+
+      # @formle/vue depends on @formle/core; core must be published first so
+      # that the version pnpm rewrites workspace:* to actually exists on npm.
+      - name: Release @formle/core
+        working-directory: packages/core
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm exec semantic-release
+
+      - name: Release @formle/vue
+        working-directory: packages/vue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm exec semantic-release
