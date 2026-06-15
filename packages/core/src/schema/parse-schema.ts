@@ -1,10 +1,23 @@
 import { FormleSchemaError, type SchemaIssue } from './errors';
 import type { FormSchema } from './types';
 
-const SUPPORTED_FIELD_TYPES = new Set(['text']);
+const SUPPORTED_FIELD_TYPES = new Set(['text', 'email', 'password']);
+
+// email and password are string-typed fields: they accept the same validation
+// rules as text. email adds a built-in format check in the validator; password
+// carries no built-in format rule by design (see validation/validate.ts).
+const STRING_FIELD_VALIDATION_KEYS = new Set([
+  'required',
+  'minLength',
+  'maxLength',
+  'pattern',
+  'custom',
+]);
 
 const VALID_VALIDATION_KEYS_BY_TYPE: Record<string, ReadonlySet<string>> = {
-  text: new Set(['required', 'minLength', 'maxLength', 'pattern', 'custom']),
+  text: STRING_FIELD_VALIDATION_KEYS,
+  email: STRING_FIELD_VALIDATION_KEYS,
+  password: STRING_FIELD_VALIDATION_KEYS,
 };
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

@@ -17,13 +17,11 @@ const schema: FormSchema = {
     },
     {
       id: 'email',
-      type: 'text',
+      type: 'email',
       label: 'Email',
       placeholder: 'you@example.com',
-      validation: {
-        required: true,
-        pattern: '^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$',
-      },
+      // No pattern needed: type 'email' validates the format automatically.
+      validation: { required: true },
     },
     {
       id: 'username',
@@ -36,6 +34,13 @@ const schema: FormSchema = {
         maxLength: 20,
         pattern: '^[a-z0-9_]+$',
       },
+    },
+    {
+      id: 'password',
+      type: 'password',
+      label: 'Password',
+      placeholder: 'At least 8 characters',
+      validation: { required: true, minLength: 8 },
     },
   ],
 };

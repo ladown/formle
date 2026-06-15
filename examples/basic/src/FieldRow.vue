@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Field } from "@formle/core";
 import { useField, type UseFormReturn } from "@formle/vue";
+import { computed } from "vue";
 
 const props = defineProps<{
   field: Field;
@@ -8,6 +9,18 @@ const props = defineProps<{
 }>();
 
 const { attrs, error } = useField(props.field.id, props.form);
+
+// The headless consumer chooses the HTML input type from the schema field type.
+const inputType = computed(() => {
+  switch (props.field.type) {
+    case "email":
+      return "email";
+    case "password":
+      return "password";
+    default:
+      return "text";
+  }
+});
 </script>
 
 <template>
@@ -15,7 +28,7 @@ const { attrs, error } = useField(props.field.id, props.form);
     <label :for="field.id">{{ field.label }}</label>
     <input
       :id="field.id"
-      type="text"
+      :type="inputType"
       class="input"
       :class="{ 'input--error': error !== null }"
       :placeholder="field.placeholder"
