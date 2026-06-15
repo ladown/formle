@@ -1,0 +1,4 @@
+{
+  "extends": ["semantic-release-monorepo", "../../.releaserc.base.json"],
+  "tagFormat": "@formle/core@${version}"
+}

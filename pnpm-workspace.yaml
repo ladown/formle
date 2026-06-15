@@ -4,5 +4,7 @@ packages:
   - "examples/*"
 allowBuilds:
   esbuild: true
+  rolldown: true
 onlyBuiltDependencies:
   - esbuild
+  - rolldown

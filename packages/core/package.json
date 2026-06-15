@@ -32,7 +32,9 @@
     }
   },
   "scripts": {
-    "test": "vitest run"
+    "build": "tsdown",
+    "test": "vitest run",
+    "release": "semantic-release"
   },
   "devDependencies": {
     "vitest": "4.1.6"
