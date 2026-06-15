@@ -67,11 +67,32 @@ describe('parseSchema', () => {
     }
   });
 
+  it('accepts email and password fields with string validation rules', () => {
+    const result = parseSchema({
+      version: '1',
+      fields: [
+        { id: 'email', type: 'email', validation: { required: true } },
+        {
+          id: 'password',
+          type: 'password',
+          validation: { required: true, minLength: 8 },
+        },
+      ],
+    });
+    expect(result.fields).toHaveLength(2);
+    expect(result.fields[0]).toEqual({
+      id: 'email',
+      type: 'email',
+      validation: { required: true },
+    });
+    expect(result.fields[1]?.type).toBe('password');
+  });
+
   it('rejects fields with an unsupported type', () => {
     try {
       parseSchema({
         version: '1',
-        fields: [{ id: 'email', type: 'email' }],
+        fields: [{ id: 'age', type: 'number' }],
       });
       expect.fail('expected parseSchema to throw');
     } catch (error) {

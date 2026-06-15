@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # lint/format steps deferred until oxlint/oxfmt configured (see TOOLING.md)
+
+      - name: Typecheck
+        run: pnpm -r exec tsc --noEmit
+
+      - name: Test
+        run: pnpm -r test
+
+      - name: Build example
+        run: pnpm --filter formle-example-basic build

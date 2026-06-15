@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    branches: [master, beta]
+
+# semantic-release needs to push tags, commits, and create GitHub releases.
+# id-token: write enables npm OIDC trusted publishing (no NPM_TOKEN required).
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # semantic-release requires the full history to compute version bumps.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm -r exec tsc --noEmit
+
+      - name: Test
+        run: pnpm -r test
+
+      - name: Build
+        run: pnpm -r build
+
+      # Releases run strictly sequentially in topological order
+      # (--workspace-concurrency=1): @formle/core is released before @formle/vue,
+      # so the version pnpm rewrites its workspace:* dependency to already exists
+      # on npm. Authentication uses npm OIDC trusted publishing via id-token;
+      # no NPM_TOKEN secret is needed.
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm release

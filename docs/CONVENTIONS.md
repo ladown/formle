@@ -169,7 +169,7 @@ Formle uses **Conventional Commits**. The release tooling (`semantic-release-mon
 
 ### Scope
 
-Scope is the package name without the `formle-` prefix:
+Scope is the package name without the `@formle/` prefix:
 
 - `core` for `packages/core`
 - `vue` for `packages/vue`

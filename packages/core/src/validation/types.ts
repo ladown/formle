@@ -1,4 +1,9 @@
-export type ValidationCode = 'required' | 'minLength' | 'maxLength' | 'pattern';
+export type ValidationCode =
+  | 'required'
+  | 'email'
+  | 'minLength'
+  | 'maxLength'
+  | 'pattern';
 
 export type ValidationIssue = {
   /** Field id where the issue occurred. */

@@ -44,7 +44,7 @@ All commands should pass on a fresh clone.
 | `pnpm docs:dev`     | Serve docs site locally           |
 | `pnpm docs:build`   | Build docs site                   |
 
-Filter to a single package with `pnpm --filter formle <script>` or `pnpm --filter formle-vue <script>`.
+Filter to a single package with `pnpm --filter @formle/core <script>` or `pnpm --filter @formle/vue <script>`.
 
 ## Code conventions
 
@@ -101,7 +101,7 @@ Out of scope for the project, possibly forever:
 
 Use the bug report template. A good report includes:
 
-- Versions of `formle`, `formle-vue`, `vue`, and Node
+- Versions of `@formle/core`, `@formle/vue`, `vue`, and Node
 - A minimal reproduction (CodeSandbox or repository)
 - Expected vs actual behavior
 - Stack trace if there's an error

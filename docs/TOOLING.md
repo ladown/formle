@@ -82,7 +82,7 @@ export default defineConfig({
 For `packages/vue`, add Vue SFC support via a Rolldown-compatible plugin. Verify before adding:
 
 ```sh
-pnpm --filter formle-vue build
+pnpm --filter @formle/vue build
 ```
 
 Should produce `dist/index.js`, `dist/index.cjs`, `dist/index.d.ts`, `dist/index.d.cts`.
@@ -163,26 +163,62 @@ Run:
 
 ```sh
 pnpm test               # all packages
-pnpm --filter formle test  # one package
+pnpm --filter @formle/core test  # one package
 pnpm test --watch       # watch mode
 ```
 
-## Release (`semantic-release-monorepo`)
+## Release (`semantic-release` + `semantic-release-monorepo`)
 
-Each package is versioned and released independently. The release workflow:
+Each package is versioned and released independently from its own commit history.
 
-1. Push to `main` triggers `.github/workflows/release.yml`
-2. `semantic-release-monorepo` runs per package
-3. Each package's commit history is filtered to commits touching its directory
-4. Conventional commit prefixes determine version bumps:
-   - `feat:` → minor
-   - `fix:`, `perf:` → patch
-   - `BREAKING CHANGE:` in body → major (until v1.0.0, breaking changes go via minor)
-5. Tags are created per package: `formle@0.1.0`, `formle-vue@0.1.0`
-6. Changelog entries are generated per package
-7. npm publish per package
+### Split config architecture
 
-This is documented further in CI workflow files.
+Configuration is split across one shared base file and one thin per-package file:
+
+- `.releaserc.base.json` (repo root) — the full plugin chain and shared options (branches, commit-analyzer rules, release notes, changelog, publish, git, GitHub). All policy lives here, defined once.
+- `packages/*/.releaserc.json` — extends both `semantic-release-monorepo` and the base file, and adds only what is package-specific: the `tagFormat`.
+
+```json
+{
+  "extends": ["semantic-release-monorepo", "../../.releaserc.base.json"],
+  "tagFormat": "@formle/core@${version}"
+}
+```
+
+Why split: the plugin chain is identical for every package, so duplicating it per package would drift over time. Keeping it in one base file means a single edit updates every package's pipeline, while each package file stays a two-line declaration of its own tag namespace. `semantic-release-monorepo` filters each package's commit history to commits that touch its directory, so versions bump independently.
+
+### Plugin chain
+
+`.releaserc.base.json` runs these plugins in order:
+
+1. `@semantic-release/commit-analyzer` (`conventionalcommits` preset) — determines the bump. Custom `releaseRules` extend the defaults: `refactor` and `perf` → patch; `docs` scoped `readme` → patch; `chore`, `style`, `test`, `build`, `ci` → no release.
+2. `@semantic-release/release-notes-generator` (`conventionalcommits` preset) — generates release notes.
+3. `@semantic-release/changelog` — writes per-package `CHANGELOG.md`.
+4. `@semantic-release/npm` with `"npmPublish": false` — updates `package.json` version and prepares the tarball, but does **not** publish (publishing is delegated to the next plugin so pnpm handles workspace protocol rewriting).
+5. `@semantic-release/exec` — `publishCmd: "pnpm publish --no-git-checks --access public"`. pnpm performs the actual publish, rewriting `workspace:*` dependencies to the concrete published version.
+6. `@semantic-release/git` — commits the bumped `package.json` and `CHANGELOG.md` back with `chore(release): <tag> [skip ci]`.
+7. `@semantic-release/github` — creates the GitHub Release.
+
+### Branches
+
+- `master` — stable releases.
+- `beta` — prerelease channel (`{ "name": "beta", "prerelease": true }`).
+
+The repo's default branch is **`master`** (it has always been on `master`, not `main`).
+
+### Why pnpm publish via `exec`
+
+The default `@semantic-release/npm` publish does not understand pnpm's `workspace:*` dependency protocol. By disabling its publish step and delegating to `pnpm publish` through `@semantic-release/exec`, the `workspace:*` ranges (e.g. `@formle/vue` depending on `@formle/core`) are rewritten to the real version at publish time. The root `release` script runs packages strictly sequentially in topological order:
+
+```json
+{ "release": "pnpm -r --workspace-concurrency=1 run release" }
+```
+
+so `@formle/core` publishes before `@formle/vue` and the version `@formle/vue` references already exists on npm.
+
+### Authentication
+
+The release workflow grants `id-token: write`, so the pipeline is **OIDC-ready**. Today the first publish still authenticates with an `NPM_TOKEN` secret; once each package exists on npm, migrating to an [npm OIDC trusted publisher](https://docs.npmjs.com/trusted-publishers) removes the long-lived token entirely. That migration is a future improvement, not a blocker.
 
 ## Why not Biome
 
@@ -221,10 +257,10 @@ If Formle grows external contributors, migrating to Changesets is a reasonable f
 6. Build (`pnpm build`)
 7. Build examples (`pnpm --filter './examples/**' build`)
 
-`.github/workflows/release.yml` runs on push to `main`:
+`.github/workflows/release.yml` runs on push to `master` and `beta`:
 
-1. All of CI above
-2. `semantic-release-monorepo` per package
+1. Install (frozen lockfile), typecheck, test, build
+2. `pnpm release` — `semantic-release` per package, sequentially in topological order
 
 ## Local development scripts
 
